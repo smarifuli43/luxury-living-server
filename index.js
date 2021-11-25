@@ -31,8 +31,9 @@ async function run() {
       const result = await usersCollection.insertOne(user);
       res.json(result);
     });
-    // POST user for  google sign in
 
+    
+    // POST user for  google sign in
     app.put('/users', async (req, res) => {
       const user = req.body;
       const filter = { email: user.email };
