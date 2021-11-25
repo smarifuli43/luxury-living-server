@@ -22,13 +22,29 @@ async function run() {
     await client.connect();
     console.log('database connected');
 
+    const database = client.db('luxury-living');
+    const usersCollection = database.collection('users');
 
+    // POST API for users
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.json(result);
+    });
+    // POST user for  google sign in
 
-
-
-
-
-    
+    app.put('/users', async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const options = { upsert: true };
+      const updateDoc = { $set: user };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
   } finally {
     // await client.close();
   }
