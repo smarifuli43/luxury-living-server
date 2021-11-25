@@ -24,6 +24,7 @@ async function run() {
 
     const database = client.db('luxury-living');
     const usersCollection = database.collection('users');
+    const servicesCollection = database.collection('services');
 
     // POST API for users
     app.post('/users', async (req, res) => {
@@ -32,7 +33,6 @@ async function run() {
       res.json(result);
     });
 
-    
     // POST user for  google sign in
     app.put('/users', async (req, res) => {
       const user = req.body;
@@ -45,6 +45,20 @@ async function run() {
         options
       );
       res.json(result);
+    });
+
+    // POST service API
+    app.post('/services', async (req, res) => {
+      const service = req.body;
+      const result = await servicesCollection.insertOne(service);
+      res.json(result);
+    });
+
+    // get Services API
+    app.get('/services', async (req, res) => {
+      const cursor = servicesCollection.find({});
+      const result = await cursor.toArray();
+      res.send(result);
     });
   } finally {
     // await client.close();
