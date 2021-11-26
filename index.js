@@ -25,6 +25,7 @@ async function run() {
     const database = client.db('luxury-living');
     const usersCollection = database.collection('users');
     const servicesCollection = database.collection('services');
+    const reviewsCollection = database.collection('reviews');
 
     // POST API for users
     app.post('/users', async (req, res) => {
@@ -59,6 +60,13 @@ async function run() {
       const cursor = servicesCollection.find({});
       const result = await cursor.toArray();
       res.send(result);
+    });
+
+    // get all review
+    app.get('/reviews', async (req, res) => {
+      const cursor = reviewsCollection.find({});
+      const reviews = await cursor.toArray();
+      res.send(reviews);
     });
   } finally {
     // await client.close();
