@@ -90,6 +90,12 @@ async function run() {
       }
       res.json({ admin: isAdmin });
     });
+    // Post REVIEW
+    app.post('/reviews', async (req, res) => {
+      const review = req.body;
+    const result = await reviewsCollection.insertOne(review);
+    res.json(result);
+    });
   } finally {
     // await client.close();
   }
