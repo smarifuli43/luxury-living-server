@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
+const ObjectId = require('mongodb').ObjectId;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -26,6 +27,7 @@ async function run() {
     const usersCollection = database.collection('users');
     const servicesCollection = database.collection('services');
     const reviewsCollection = database.collection('reviews');
+    const orderCollection = database.collection('orders');
 
     // POST API for users
     app.post('/users', async (req, res) => {
@@ -62,6 +64,15 @@ async function run() {
       res.send(result);
     });
 
+    // Get specific service API
+    app.get('/services/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const service = await servicesCollection.findOne(query);
+      console.log(service);
+      res.json(service);
+    });
+
     // get all review
     app.get('/reviews', async (req, res) => {
       const cursor = reviewsCollection.find({});
@@ -93,8 +104,15 @@ async function run() {
     // Post REVIEW
     app.post('/reviews', async (req, res) => {
       const review = req.body;
-    const result = await reviewsCollection.insertOne(review);
-    res.json(result);
+      const result = await reviewsCollection.insertOne(review);
+      res.json(result);
+    });
+
+    //  POST Order INFO
+    app.post('/orders', async (req, res) => {
+      const orders = req.body;
+      const result = await orderCollection.insertOne(orders);
+      res.json(result);
     });
   } finally {
     // await client.close();
